@@ -1,11 +1,11 @@
 import { test, expect } from "../setup";
 import { register } from "../utils/customer";
 
-test("Should able to register", async ({ page }) => {
+test("register", async ({ page }) => {
     await register(page);
 });
 
-test("should able to login", async ({ page }) => {
+test("login", async ({ page }) => {
     const credentials = await register(page);
 
     await page.goto("");
@@ -21,7 +21,7 @@ test("should able to login", async ({ page }) => {
     await expect(page.getByText("Logout").first()).toBeVisible();
 });
 
-test("should able to logout", async ({ page }) => {
+test("logout", async ({ page }) => {
     const credentials = await register(page);
 
     await page.goto("");

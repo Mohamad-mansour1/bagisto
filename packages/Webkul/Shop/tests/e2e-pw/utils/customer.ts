@@ -4,7 +4,6 @@ import {
     generateFirstName,
     generateLastName,
     generateEmail,
-    generateDescription,
 } from "./faker";
 
 export async function register(page) {
@@ -30,15 +29,6 @@ export async function register(page) {
         .fill(credentials.password);
     await page.getByPlaceholder("Confirm Password").click();
     await page.getByPlaceholder("Confirm Password").fill(credentials.password);
-
-    const agreementLocator = page.locator('#agreement').nth(1);
-    
-    const isVisible = await agreementLocator.isVisible();
-
-    if (isVisible) {
-        await page.getByText('I agree with this statement.').click();
-    }
-
     await page
         .locator("#main form div")
         .filter({ hasText: "Subscribe to newsletter" })
@@ -67,11 +57,7 @@ export async function loginAsCustomer(page) {
     await page.getByPlaceholder("email@example.com").click();
     await page.getByPlaceholder("email@example.com").fill(credentials.email);
     await page.getByPlaceholder("email@example.com").press("Tab");
-    await page.getByPlaceholder("Password").fill(credentials.password);    const agreementLocator = page.locator('#agreement').nth(1);
-    const isVisible = await agreementLocator.isVisible();
-    if (isVisible) {
-        await page.getByText('I agree with this statement.').click();
-    }
+    await page.getByPlaceholder("Password").fill(credentials.password);
     await page.getByRole("button", { name: "Sign In" }).click();
 
     return credentials;
@@ -136,30 +122,4 @@ export async function addWishlist(page) {
     await expect(
         page.getByText("Item Successfully Added To Wishlist").first()
     ).toBeVisible();
-}
-
-export async function addReview(page) {
-    const review = {
-        title: generateName(),
-        comment: generateDescription(),
-    };
-
-    await page
-        .locator("#main div")
-        .filter({ hasText: "New Products View All New" })
-        .getByLabel("Arctic Touchscreen Winter")
-        .click();
-    await page.getByRole("button", { name: "Reviews" }).click();
-    await page.locator("#review-tab").getByText("Write a Review").click();
-    await page.locator("#review-tab span").nth(3).click();
-    await page.locator("#review-tab span").nth(4).click();
-    await page.getByPlaceholder("Title").fill(review.title);
-    await page.getByPlaceholder("Comment").fill(review.comment);
-    await page.getByRole("button", { name: "Submit Review" }).click();
-
-    await expect(
-        page.getByText("Review submitted successfully.").first()
-    ).toBeVisible();
-
-    return review;
 }
